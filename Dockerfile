@@ -2,8 +2,11 @@
 FROM      debian:jessie
 
 RUN       apt-get update && \
-          apt-get install -y nginx nginx-extras apache2-utils dumb-init && \
+          apt-get install -y nginx nginx-extras apache2-utils && \
           rm -rf /var/lib/apt/lists/*
+
+RUN       wget https://github.com/Yelp/dumb-init/releases/download/v1.1.1/dumb-init_1.1.1_amd64.deb
+RUN       dpkg -i dumb-init_*.deb
     
 COPY      set_htpasswd.sh /set_htpasswd.sh
 COPY      webdav-site.conf /etc/nginx/sites-enabled/
