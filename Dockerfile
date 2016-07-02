@@ -2,7 +2,7 @@
 FROM      debian:jessie
 
 RUN       apt-get update && \
-          apt-get install -y nginx nginx-extras apache2-utils && \
+          apt-get install -y nginx nginx-extras apache2-utils dumb-init && \
           rm -rf /var/lib/apt/lists/*
     
 COPY      set_htpasswd.sh /set_htpasswd.sh
@@ -20,7 +20,9 @@ RUN       mkdir -p /var/www/.temp
 RUN       chown -R www-data:www-data /var/www
 RUN       chmod -R a+rw /var/www
 
+EXPOSE 80 443
+
 # Share the volume with the files to other dockers
 VOLUME    /var/www
 
-CMD       /set_htpasswd.sh && nginx -g "daemon off;" 
+CMD       dumb-init sh -c '/set_htpasswd.sh && nginx -g "daemon off;"'
